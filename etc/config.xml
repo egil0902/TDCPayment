@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+        xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
         <payment>
             <simple>
+                <payment_action>authorize</payment_action>
                 <active>1</active>
                 <model>CDS\TDCPayment\Model\Payment\Simple</model>
-                <order_status>pending</order_status>
+                <order_status>pending_payment</order_status>
                 <title>Simple</title>
                 <allowspecific>0</allowspecific>
-                <group>Offline</group>
             </simple>
         </payment>
     </default>
