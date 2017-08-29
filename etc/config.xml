@@ -8,7 +8,7 @@
                 <model>CDS\TDCPayment\Model\Payment\Simple</model>
                 <active>1</active>
                 <title>Simple</title>
-                <order_status>pending</order_status>
+                <order_status>pending_payment</order_status>
             </simple>
         </payment>
     </default>
