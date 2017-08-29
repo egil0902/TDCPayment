@@ -7,10 +7,7 @@ define(
         return Component.extend({
             defaults: {
                 template: 'CDS_TDCPayment/payment/simple'
-            },
-            getMailingAddress: function () {
-                return window.checkoutConfig.payment.checkmo.mailingAddress;
-            },
+            }
         });
     }
 );
