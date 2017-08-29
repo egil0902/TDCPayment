@@ -42,10 +42,10 @@ class Simple extends \Magento\Payment\Model\Method\Cc
             null, $data
         );
 
-        $this->_countryFactory = $countryFactory;
+        //$this->_countryFactory = $countryFactory;
 
-        $this->_minAmount = $this->getConfigData('min_order_total');
-        $this->_maxAmount = $this->getConfigData('max_order_total');
+        //$this->_minAmount = $this->getConfigData('min_order_total');
+        //$this->_maxAmount = $this->getConfigData('max_order_total');
     }
 
 
