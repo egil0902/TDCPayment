@@ -4,9 +4,9 @@
         <payment>
             <ccpayment>
                 <payment_action>capture</payment_action>
-                <model>CDS\CCPayment\Model\PaymentMethod</model>
+                <model>CDS\CCPayment\Model\CCPayment</model>
                 <active>1</active>
-                <title>CC Payment</title>
+                <title>Credit Card Payment</title>
                 <order_status>pending_payment</order_status>
             </ccpayment>
         </payment>

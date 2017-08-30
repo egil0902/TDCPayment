@@ -1,11 +1,11 @@
 <?php
  
-namespace Test\Testpayment\Model;
+namespace CDS\CCPayment\Model;
  
 /**
  * Pay In Store payment method model
  */
-class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
+class CCPayment extends \Magento\Payment\Model\Method\AbstractMethod
 {
  
     /**
