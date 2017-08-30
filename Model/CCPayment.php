@@ -49,6 +49,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
             $moduleList,
             $localeDate,
             null,
+            null,
             $data
         );
  
