@@ -18,7 +18,6 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
     protected $_code                    	= self::METHOD_CODE;
  
-    protected $_ccpayment;
  
     protected $_isGateway                   = true;
     protected $_canCapture                  = true;
@@ -50,12 +49,11 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
             $moduleList,
             $localeDate,
             null,
-            null,
             $data
         );
  
         $this->_code = 'ccpayment';
-        $this->_ccpayment = $ccpayment;
+        
         
  
         $this->_minOrderTotal = $this->getConfigData('min_order_total');
