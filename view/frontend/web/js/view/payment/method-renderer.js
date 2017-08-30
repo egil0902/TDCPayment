@@ -11,7 +11,7 @@ define(
         rendererList.push(
             {
                 type: 'ccpayment',
-                component: 'CDS_CCPayment/js/view/payment/method-renderer/ccpayment'
+                component: 'CDS_CCPayment/js/view/payment/method-renderer/cc-form'
             }
         );
         return Component.extend({});
