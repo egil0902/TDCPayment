@@ -1,6 +1,5 @@
 define(
     [
-        'Magento_Checkout/js/view/payment/default',
         'Magento_Payment/js/view/payment/cc-form',
         'jquery',
         'Magento_Checkout/js/action/place-order',
@@ -16,7 +15,7 @@ define(
                 template: 'CDS_CCPayment/payment/ccpayment'
             },
              getCode: function() {
-                return 'stripe';
+                return 'ccpayment';
             },
 
             isActive: function() {
