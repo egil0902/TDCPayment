@@ -3,11 +3,12 @@
     <default>
         <payment>
             <ccpayment>
-                <payment_action>capture</payment_action>
+                <payment_action>authorize_capture</payment_action>
                 <model>CDS\CCPayment\Model\CCPayment</model>
                 <active>1</active>
                 <title>Credit Card Payment</title>
                 <order_status>pending_payment</order_status>
+                <cctypes>AE,VI,MC</cctypes>
             </ccpayment>
         </payment>
     </default>
