@@ -10,7 +10,7 @@ define(
         'use strict';
         rendererList.push(
             {
-                type: 'testpayment',
+                type: 'ccpayment',
                 component: 'CDS_CCPayment/js/view/payment/method-renderer/ccpayment'
             }
         );

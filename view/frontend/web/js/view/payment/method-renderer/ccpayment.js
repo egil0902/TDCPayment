@@ -1,17 +1,14 @@
 define(
     [
-        'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list'
+        'Magento_Checkout/js/view/payment/default'
     ],
-    function (Component,
-              rendererList) {
+    function (Component) {
         'use strict';
-        rendererList.push(
-            {
-                type: 'ccpayment',
-                component: 'CDS_TDCPayment/payment/ccpayment'
+ 
+        return Component.extend({
+            defaults: {
+                template: 'CDS_CCPayment/payment/ccpayment'
             }
-        );
-        return Component.extend({});
+        });
     }
 );
