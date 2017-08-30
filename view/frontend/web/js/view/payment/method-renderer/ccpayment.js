@@ -14,10 +14,7 @@ define(
             defaults: {
                 template: 'CDS_CCPayment/payment/ccpayment'
             },
-             getCode: function() {
-                return 'ccpayment';
-            },
-
+            
             isActive: function() {
                 return true;
             },
