@@ -25,6 +25,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
     protected $_canRefund                   = true;
     protected $_minOrderTotal = 0;
     protected $months_interest_free;   
+    protected $minimum_amount;
  
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -59,7 +60,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
         $this->_minOrderTotal = $this->getConfigData('min_order_total');
  	$this->months_interest_free = $this->getConfigData('interest_free');
- 
+        $this->minimum_amount = $this->getConfigData('minimum_amount');
     }
  
     
@@ -93,5 +94,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         }        
         return $months;
     }
-
+    public function getMinimumAmount() {
+        return $this->minimum_amount;
+    }
 }

@@ -24,7 +24,7 @@ define(
         //console.log(customer.customerData);
         //console.log(quote.billingAddress._latestValue);
         var customerData = quote.billingAddress._latestValue;  
-        var total = window.checkoutConfig.payment.total;
+        var total = window.checkoutConfig.ccpayment.total;
         console.log(customerData);
         
         $(document).on("change", "#interest_free", function() {        
@@ -58,12 +58,12 @@ define(
             },
             
             getMonthsInterestFree: function() {
-                return window.checkoutConfig.payment.months_interest_free;                
+                return window.checkoutConfig.ccpayment.months_interest_free;                
             },
             
             showMonthsInterestFree: function() {
-                var months = window.checkoutConfig.payment.months_interest_free;         
-                var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
+                var months = window.checkoutConfig.ccpayment.months_interest_free;         
+                var minimum_amount = window.checkoutConfig.ccpayment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
                 total = parseInt(total);
                 
