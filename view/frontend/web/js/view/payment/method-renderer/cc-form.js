@@ -80,7 +80,7 @@ define(
                 if($form.validation() && $form.validation('isValid')){
                     this.messageContainer.clear();
 
-                    var isSandbox = window.checkoutConfig.payment.openpay_credentials.is_sandbox === "0" ? false : true;
+                    //var isSandbox = window.checkoutConfig.payment.openpay_credentials.is_sandbox === "0" ? false : true;
                     //OpenPay.setId(window.checkoutConfig.payment.openpay_credentials.merchant_id);
                     //OpenPay.setApiKey(window.checkoutConfig.payment.openpay_credentials.public_key);
                     //OpenPay.setSandboxMode(isSandbox);                    
