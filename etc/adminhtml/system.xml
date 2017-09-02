@@ -15,7 +15,11 @@
                     <label>Credit Card Types</label>
                     <source_model>CDS\CCPayment\Model\Source\Cctype</source_model>
                 </field>
- 
+                <field id="interest_free" translate="label" type="multiselect" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Meses sin Intereses</label>
+                    <source_model>CDS\CCPayment\Model\Source\MonthsInterestFree::getMonths</source_model>
+                    <comment>Presione ctrl y clic para seleccionar más de una opción</comment>
+                </field>   
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Payment from Applicable Countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
