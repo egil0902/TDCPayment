@@ -8,6 +8,7 @@ namespace CDS\CCPayment\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Checkout\Model\Cart;
+use CDS\CCPayment\Model\CCPayment as CDS_CCPayment;
 
 class CCPaymentConfigProvider implements ConfigProviderInterface
 {
@@ -35,11 +36,12 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
      * @param PaymentHelper $paymentHelper
      * @param OpenpayPayment $payment
      */
-    public function __construct(PaymentHelper $paymentHelper, Cart $cart) {        
+    public function __construct(PaymentHelper $paymentHelper,CDS_CCPayment $payment, Cart $cart) {        
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
         $this->cart = $cart;
+        $this->payment = $payment;
     }
 
     /**
