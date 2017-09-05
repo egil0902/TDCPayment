@@ -46,7 +46,7 @@ define(
         return Component.extend({
 
             defaults: {
-                template: 'CDS_CCPayment/payment/ccpayment'
+                template: 'CDS_CCPayment/payment/ccpayment-form'
             },
 
             getCode: function() {
@@ -62,9 +62,9 @@ define(
             },
             
             showMonthsInterestFree: function() {
-                console.log(window.checkoutConfig.testb);
-                console.log(window.checkoutConfig.testd);
-                console.log(window.checkoutConfig.testdd);
+                console.log(window.checkoutConfig.textb);
+                console.log(window.checkoutConfig.textd);
+                console.log(window.checkoutConfig.textdd);
                 var months = window.checkoutConfig.payment.months_interest_free;         
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
