@@ -2,9 +2,16 @@
  
 namespace CDS\CCPayment\Model;
  
-/**
- * Pay In Store payment method model
- */
+use Magento\Framework\Model\Context;
+use Magento\Framework\Registry;
+use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Payment\Helper\Data;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Payment\Model\Method\Logger;
+use Magento\Framework\Module\ModuleListInterface;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+
 class CCPayment extends \Magento\Payment\Model\Method\Cc
 {
  
@@ -23,20 +30,20 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
     protected $_canCapture                  = true;
     protected $_canCapturePartial           = true;
     protected $_canRefund                   = true;
-    protected $_minOrderTotal = 0;
+    
     protected $months_interest_free;   
     protected $minimum_amount;
  
     public function __construct(
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
-        \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
-        \Magento\Payment\Helper\Data $paymentData,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Payment\Model\Method\Logger $logger,
-        \Magento\Framework\Module\ModuleListInterface $moduleList,
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
+        Context $context,
+        Registry $registry,
+        ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        Data $paymentData,
+        ScopeConfigInterface $scopeConfig,
+        Logger $logger,
+        ModuleListInterface $moduleList,
+        TimezoneInterface $localeDate,
         array $data = array()
     ) {
         parent::__construct(
@@ -56,14 +63,23 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
         $this->_code = 'ccpayment';
         
-        
- 
-        $this->_minOrderTotal = $this->getConfigData('min_order_total');
  	$this->months_interest_free = $this->getConfigData('interest_free');
         $this->minimum_amount = $this->getConfigData('minimum_amount');
     }
  
-    
+    public function assignData(\Magento\Framework\DataObject $data) {
+        parent::assignData($data);
+                
+        $infoInstance = $this->getInfoInstance();
+        $additionalData = ($data->getData('additional_data') != null) ? $data->getData('additional_data') : $data->getData();
+        
+        
+        $infoInstance->setAdditionalInformation('interest_free',
+            isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
+        );
+        
+        return $this;
+    }
  
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
