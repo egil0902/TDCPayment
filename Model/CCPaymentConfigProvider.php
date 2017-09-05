@@ -50,8 +50,11 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {                
         $config = [];
+        $config['textb'] = "Antes del for";
         foreach ($this->methodCodes as $code) {
+            $config['textd'] = "for method codes";
             if ($this->methods[$code]->isAvailable()) {
+                $config['textdd'] = "for is aviable";
                 //$config['payment']['openpay_credentials'] = array("merchant_id" => $this->payment->getMerchantId(), "public_key" => $this->payment->getPublicKey(), "is_sandbox"  => $this->payment->isSanbox());                 
                 $config['payment']['months_interest_free'] = $this->payment->getMonthsInterestFree();
                 $config['payment']['total'] = $this->cart->getQuote()->getGrandTotal();

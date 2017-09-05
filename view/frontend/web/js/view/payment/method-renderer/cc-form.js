@@ -62,6 +62,9 @@ define(
             },
             
             showMonthsInterestFree: function() {
+                console.log(window.checkoutConfig.testb);
+                console.log(window.checkoutConfig.testd);
+                console.log(window.checkoutConfig.testdd);
                 var months = window.checkoutConfig.payment.months_interest_free;         
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;

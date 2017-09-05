@@ -10,7 +10,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="cds_ccpayment_config_provider" xsi:type="object">CDS\CCPayment\Model\CCPaymentConfigProvider</item>
+                <item name="ccpayment_config_provider" xsi:type="object">CDS\CCPayment\Model\CCPaymentConfigProvider</item>
             </argument>
         </arguments>
     </type>
