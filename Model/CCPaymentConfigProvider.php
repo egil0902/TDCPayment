@@ -16,7 +16,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
      * @var string[]
      */
     protected $methodCodes = [
-        'ccpayment',        
+        'ccpayment',
     ];
 
     /**
@@ -36,7 +36,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
      * @param PaymentHelper $paymentHelper
      * @param OpenpayPayment $payment
      */
-    public function __construct(PaymentHelper $paymentHelper,CDS_CCPayment $payment, Cart $cart) {        
+    public function __construct(PaymentHelper $paymentHelper,CDS_CCPayment $payment, Cart $cart) {
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
@@ -50,11 +50,11 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {                
         $config = [];
-        $config['textb'] = "Antes del for";
+        $config['payment']['textb'] = 'Antes del for';
         foreach ($this->methodCodes as $code) {
-            $config['textd'] = "for method codes";
+//            $config['textd'] = "for method codes";
             if ($this->methods[$code]->isAvailable()) {
-                $config['textdd'] = "for is aviable";
+ //               $config['textdd'] = "for is aviable";
                 //$config['payment']['openpay_credentials'] = array("merchant_id" => $this->payment->getMerchantId(), "public_key" => $this->payment->getPublicKey(), "is_sandbox"  => $this->payment->isSanbox());                 
                 $config['payment']['months_interest_free'] = $this->payment->getMonthsInterestFree();
                 $config['payment']['total'] = $this->cart->getQuote()->getGrandTotal();
@@ -64,11 +64,10 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
                 $config['payment']['ccform']["hasSsCardType"][$code] = false;
                 $config['payment']['ccform']["months"][$code] = $this->getMonths();
                 $config['payment']['ccform']["years"][$code] = $this->getYears();
-                $config['payment']['ccform']["cvvImageUrl"][$code] = "http://".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/es_MX/Magento_Checkout/cvv.png";
-                $config['payment']['ccform']["ssStartYears"][$code] = $this->getStartYears();
+                $config['payment']['ccform']["cvvImageUrl"][$code] = "http:/\/".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
+                //$config['payment']['ccform']["ssStartYears"][$code] = $this->getStartYears();
             }
         }
-                
         return $config;
     }
     

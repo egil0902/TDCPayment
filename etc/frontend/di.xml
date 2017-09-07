@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">    
-    <virtualType name="CDS\CCPayment\Model\CCPaymentConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="CDS\CCPayment\Model\ConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
     <arguments>
 	<argument name="methodCodes" xsi:type="array">
 		<item name="ccpayment" xsi:type="const">CDS\CCPayment\Model\CCPayment::METHOD_CODE</item>

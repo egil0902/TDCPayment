@@ -18,7 +18,7 @@
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
                                                                 <item name="ccpayment" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">CDS_CCPayment/js/view/payment/method-renderer</item>
+                                                                    <item name="component" xsi:type="string">CDS_CCPayment/js/view/payment/ccpayment</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="ccpayment" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>

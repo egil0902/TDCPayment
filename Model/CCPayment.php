@@ -85,24 +85,9 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
     {
         $order = $payment->getOrder();
         $billing = $order->getBillingAddress();
-        
-    }
- 
-    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
-    {
-        $transactionId = $payment->getParentTransactionId();
- 
-        
- 
-        $payment
-            ->setTransactionId($transactionId . '-' . \Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND)
-            ->setParentTransactionId($transactionId)
-            ->setIsTransactionClosed(1)
-            ->setShouldCloseParentTransaction(1);
- 
         return $this;
     }
- 
+
     public function getMonthsInterestFree() {
         $months = explode(',', $this->months_interest_free);                  
         if(!in_array('1', $months)) {            
