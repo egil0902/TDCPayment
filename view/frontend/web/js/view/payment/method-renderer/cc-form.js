@@ -58,7 +58,10 @@ define(
             },
             
             getMonthsInterestFree: function() {
-                return window.checkoutConfig.payment.months_interest_free;                
+                var monthsAux = window.checkoutConfig.payment.months_interest_free;
+                var bines = window.checkoutConfig.payment.bines;
+                alert(bines);
+                return months;                
             },
             
             showMonthsInterestFree: function() {
