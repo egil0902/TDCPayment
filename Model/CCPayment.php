@@ -98,48 +98,6 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
     public function getMinimumAmount() {
         return $this->minimum_amount;
     }
-    public function getBines(){
-        $bines = array(
-                        array('MRCCOD' => 'AE','TIPCOD'=>'CRE','BIN'=>'370240','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'AE','TIPCOD'=>'CRE','BIN'=>'370241','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'AE','TIPCOD'=>'CRE','BIN'=>'370242','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'541854','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'545504','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'518443','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'547807','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'541376','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'454856','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'496601','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'520057','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>Y),	
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'410144','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'410145','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'451990','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'451989','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'450563','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'431846','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'553166','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'553620','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'531485','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'515811','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'546466','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'515831','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'550232','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),	
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'523763','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),		
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'414326','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),		
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'469735','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'401601','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'401602','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'404931','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'406359','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'510606','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'MC','TIPCOD'=>'CRE','BIN'=>'548083','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'464126','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'464125','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'434796','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'434797','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N),
-                        array('MRCCOD' => 'VI','TIPCOD'=>'CRE','BIN'=>'402912','6MONTH' =>Y,'12MONTH'=>Y,'18MONTH' =>Y,'24MONTH' =>N)
-                    );
-        return $bines;
-    }
+    
             
 }
