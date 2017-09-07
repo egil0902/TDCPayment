@@ -42,6 +42,9 @@ define(
             
             $("#monthly-payment").text(monthly_payment);
         });
+        $(document).on("change", "#payment[cc_number]", function() {        
+            getMonthsInterestFree();
+        });
 
         return Component.extend({
 
@@ -60,8 +63,26 @@ define(
             getMonthsInterestFree: function() {
                 var monthsAux = window.checkoutConfig.payment.months_interest_free;
                 var bines = window.checkoutConfig.payment.bines;
-                alert(bines);
-                return months;                
+                var months = null;
+                var bin = bines[10];
+                console.log(bin['BIN']);
+                for(var i = 0; i < bines.length; i++){
+                        if(this.creditCardNumber().indexOf(bines[i]['BIN'])>0){
+                                months = new Array(monthsAux[0]);
+                                if(bines[i]['6MONTH']='Y')
+                                        months.push[monthsAux[1]];
+
+                                if(bines[i]['12MONTH']='Y')
+                                        months.push[monthsAux[2]];
+
+                                if(bines[i]['18MONTH']='Y')
+                                        months.push[monthsAux[3]];
+
+                                if(bines[i]['24MONTH']='Y')
+                                        months.push[monthsAux[4]];
+                        }
+                }
+                return months;
             },
             
             showMonthsInterestFree: function() {
