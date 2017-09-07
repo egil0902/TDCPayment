@@ -50,7 +50,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {                
         $config = [];
-        $config['payment']['textb'] = 'Antes del for';
+        
         foreach ($this->methodCodes as $code) {
 //            $config['textd'] = "for method codes";
             if ($this->methods[$code]->isAvailable()) {
