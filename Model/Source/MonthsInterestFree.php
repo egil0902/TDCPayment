@@ -23,7 +23,7 @@ class MonthsInterestFree
             array('value' => '6', 'label' => '6 meses'),
             array('value' => '12', 'label' => '12 meses'),
             array('value' => '18', 'label' => '18 meses'),
-            array('value' => '24', 'label' => '18 meses')            
+            array('value' => '24', 'label' => '24 meses')            
         );     
     }
 }

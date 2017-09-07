@@ -42,7 +42,7 @@ define(
             
             $("#monthly-payment").text(monthly_payment);
         });
-        $(document).on("change", "#payment[cc_number]", function() {        
+        $(document).on("change", "cc_number", function() {        
             getMonthsInterestFree();
         });
 
@@ -69,17 +69,19 @@ define(
                 for(var i = 0; i < bines.length; i++){
                         if(this.creditCardNumber().indexOf(bines[i]['BIN'])>0){
                                 months = new Array(monthsAux[0]);
-                                if(bines[i]['6MONTH']='Y')
-                                        months.push[monthsAux[1]];
+                                if(bines[i]['6MONTH']=='Y'){
+                                        months[1]=monthsAux[1];
+                                }
 
-                                if(bines[i]['12MONTH']='Y')
-                                        months.push[monthsAux[2]];
+                                if(bines[i]['12MONTH']=='Y'){
+                                        months[2]=monthsAux[2];
+                                }
+                                if(bines[i]['18MONTH']=='Y'){
+                                        months[3]=monthsAux[3];
+                                }
+                                if(bines[i]['24MONTH']=='Y')
+                                        months[4]=monthsAux[4];
 
-                                if(bines[i]['18MONTH']='Y')
-                                        months.push[monthsAux[3]];
-
-                                if(bines[i]['24MONTH']='Y')
-                                        months.push[monthsAux[4]];
                         }
                 }
                 return months;
