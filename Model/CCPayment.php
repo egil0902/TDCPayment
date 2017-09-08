@@ -83,9 +83,27 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $order = $payment->getOrder();
-        $billing = $order->getBillingAddress();
-        return $this;
+        
+        
+        $key = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; //poner como parametro en el admin
+        $key_id = '4896565';//poner como parametro en el admin
+        $type = 'sale';
+        $orderid = $payment->getOrder();             
+        $time = time();
+        $hash = md5($orderid."|".$amount."|".$time."|".$key."|".$key_id);
+        $redirect = '';
+        $ccnumber = $this->cc_number;
+        echo $ccnumber;
+        //$ccexp
+        //$checkname
+        //$cvv
+        //$email
+        //$phone
+        //$address1 =$order->getBillingAddress();
+        //$ipaddress
+                
+                
+        //return $this;
     }
 
     public function getMonthsInterestFree() {

@@ -88,7 +88,7 @@ define(
             },
             
             showMonthsInterestFree: function() {
-                
+                var self = this;
                 var months = window.checkoutConfig.payment.months_interest_free;         
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
@@ -101,7 +101,6 @@ define(
              * Prepare and process payment information
              */
             preparePayment: function () {
-                var self = this;
                 var $form = $('#' + this.getCode() + '-form');
 
                 if($form.validation() && $form.validation('isValid')){
