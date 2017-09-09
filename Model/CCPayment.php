@@ -77,23 +77,29 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $infoInstance->setAdditionalInformation('interest_free',
             isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
         );
-        
+        $infoInstance->setAdditionalInformation('cc_number',
+            isset($additionalData['cc_number']) ? $additionalData['cc_number'] : null
+        );
         return $this;
     }
  
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        
+	$order = $payment->getOrder();
+
+        /** @var \Magento\Sales\Model\Order\Address $billing */
+        $billing = $order->getBillingAddress();
+       
         
         $key = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; //poner como parametro en el admin
         $key_id = '4896565';//poner como parametro en el admin
         $type = 'sale';
-        $orderid = $payment->getOrder();             
+        $orderid = $order->getIncrementId();
         $time = time();
         $hash = md5($orderid."|".$amount."|".$time."|".$key."|".$key_id);
         $redirect = '';
-        $ccnumber = $this->cc_number;
-        echo $ccnumber;
+        $ccnumber = $this->getInfoInstance()->getAdditionalInformation('cc_number');
+        //$ccnumber;
         //$ccexp
         //$checkname
         //$cvv
@@ -101,9 +107,10 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         //$phone
         //$address1 =$order->getBillingAddress();
         //$ipaddress
-                
-                
-        //return $this;
+        //throw new \Magento\Framework\Exception\LocalizedException(__('The capture action is not available.'));        
+	$this->_logger->debug('Error capturado por eduardo gil '.$ccnumber);
+	throw new \Magento\Framework\Validator\Exception(__('Error de mierda'));
+        return $this;
     }
 
     public function getMonthsInterestFree() {
@@ -116,6 +123,50 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
     public function getMinimumAmount() {
         return $this->minimum_amount;
     }
-    
-            
+public function error($e) {
+        /* 6001 el webhook ya existe */
+        switch ($e->getErrorCode()) {
+            case '1000':
+            case '1004':
+            case '1005':
+                $msg = 'Servicio no disponible.';
+                break;
+            /* ERRORES TARJETA */
+            case '3001':
+            case '3004':
+            case '3005':
+            case '3007':
+                $msg = 'La tarjeta fue rechazada.';
+                break;
+            case '3002':
+                $msg = 'La tarjeta ha expirado.';
+                break;
+            case '3003':
+                $msg = 'La tarjeta no tiene fondos suficientes.';
+                break;
+            case '3006':
+                $msg = 'La operación no esta permitida para este cliente o esta transacción.';
+                break;
+            case '3008':
+                $msg = 'La tarjeta no es soportada en transacciones en línea.';
+                break;
+            case '3009':
+                $msg = 'La tarjeta fue reportada como perdida.';
+                break;
+            case '3010':
+                $msg = 'El banco ha restringido la tarjeta.';
+                break;
+            case '3011':
+                $msg = 'El banco ha solicitado que la tarjeta sea retenida. Contacte al banco.';
+                break;
+            case '3012':
+                $msg = 'Se requiere solicitar al banco autorización para realizar este pago.';
+                break;
+            default: /* Demás errores 400 */
+                $msg = 'La petición no pudo ser procesada.';
+                break;
+        }
+
+        return 'ERROR '.$e->getErrorCode().'. '.$msg;
+    }
 }

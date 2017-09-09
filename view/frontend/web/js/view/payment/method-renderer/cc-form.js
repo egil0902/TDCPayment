@@ -63,12 +63,10 @@ define(
             getMonthsInterestFree: function() {
                 var monthsAux = window.checkoutConfig.payment.months_interest_free;
                 var bines = window.checkoutConfig.payment.bines;
-                var months = null;
-                var bin = bines[10];
-                console.log(bin['BIN']);
+                var months = new Array();
                 for(var i = 0; i < bines.length; i++){
-                        if(this.creditCardNumber().indexOf(bines[i]['BIN'])>0){
-                                months = new Array(monthsAux[0]);
+                        if(this.creditCardNumber().includes(bines[i]['BIN'])>0){
+                                months[0] = monthsAux[0];
                                 if(bines[i]['6MONTH']=='Y'){
                                         months[1]=monthsAux[1];
                                 }
@@ -89,7 +87,7 @@ define(
             
             showMonthsInterestFree: function() {
                 var self = this;
-                var months = window.checkoutConfig.payment.months_interest_free;         
+                var months = this.getMonthsInterestFree();//window.checkoutConfig.payment.months_interest_free;         
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
                 total = parseInt(total);
@@ -114,25 +112,28 @@ define(
                     //antifraudes
                     //OpenPay.deviceData.setup(this.getCode() + '-form', "device_session_id");
 
-                    var year_full = $('#openpay_cards_expiration_yr').val();
+                    //var year_full = $('#openpay_cards_expiration_yr').val();
                     var holder_name = this.getCustomerFullName();
-                    var card = $('#openpay_cards_cc_number').val();
-                    var cvc = $('#openpay_cards_cc_cid').val();
-                    var year = year_full.toString().substring(2, 4);
-                    var month = $('#openpay_cards_expiration').val();
+                    var card = $('#ccpayment_cc_number').val();
+                    var cvc = $('#ccpayment_cc_cid').val();
+                    //var year = year_full.toString().substring(2, 4);
+                    //var month = $('#openpay_cards_expiration').val();
 
                     var data = {
                         holder_name: holder_name,
                         card_number: card.replace(/ /g, ''),
-                        expiration_month: month || 0,
-                        expiration_year: year,
+                        //expiration_month: month || 0,
+                        //expiration_year: year,
                         cvv2: cvc
                     };
 
                     if(this.validateAddress() !== false){
                         data["address"] = this.validateAddress();
                     }
-
+		    console.log(this.placeOrder());
+		    //this.messageContainer.addErrorMessage({
+                    //            message: response.data.description
+                    //        });
                     /*OpenPay.token.create(
                         data,
                         function(response) {
