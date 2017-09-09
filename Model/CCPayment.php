@@ -73,12 +73,23 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $infoInstance = $this->getInfoInstance();
         $additionalData = ($data->getData('additional_data') != null) ? $data->getData('additional_data') : $data->getData();
         
-        
-        $infoInstance->setAdditionalInformation('interest_free',
-            isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
+        $infoInstance->setAdditionalInformation('cc_cid',
+            isset($additionalData['cc_cid']) ? $additionalData['cc_cid'] : null
+        );
+        $infoInstance->setAdditionalInformation('cc_type',
+            isset($additionalData['cc_type']) ? $additionalData['cc_type'] : null
+        );
+        $infoInstance->setAdditionalInformation('cc_exp_year',
+            isset($additionalData['cc_exp_year']) ? $additionalData['cc_exp_year'] : null
+        );
+        $infoInstance->setAdditionalInformation('cc_exp_month',
+            isset($additionalData['cc_exp_month']) ? $additionalData['cc_exp_month'] : null
         );
         $infoInstance->setAdditionalInformation('cc_number',
             isset($additionalData['cc_number']) ? $additionalData['cc_number'] : null
+        );
+        $infoInstance->setAdditionalInformation('interest_free',
+            isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
         );
         return $this;
     }
@@ -91,24 +102,40 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $billing = $order->getBillingAddress();
        
         
-        $key = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; //poner como parametro en el admin
-        $key_id = '4896565';//poner como parametro en el admin
-        $type = 'sale';
-        $orderid = $order->getIncrementId();
-        $time = time();
-        $hash = md5($orderid."|".$amount."|".$time."|".$key."|".$key_id);
-        $redirect = '';
-        $ccnumber = $this->getInfoInstance()->getAdditionalInformation('cc_number');
-        //$ccnumber;
-        //$ccexp
-        //$checkname
-        //$cvv
+        $post_data['key'] = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; //poner como parametro en el admin
+        $post_data['key_id'] = '4896565';//poner como parametro en el admin
+        $post_data['type'] = 'sale';
+        $post_data['orderid'] = $order->getIncrementId();
+        $post_data['time'] = time();
+        $post_data['hash'] = md5($orderid."|".$amount."|".$time."|".$key."|".$key_id);
+        $post_data['redirect'] = '';
+        $post_data['ccnumber'] = $this->getInfoInstance()->getAdditionalInformation('cc_number');
+        
+        $post_data['ccexp'] = $this->getInfoInstance()->getAdditionalInformation('cc_exp_month').$this->getInfoInstance()->getAdditionalInformation('cc_exp_year');
+        $post_data['checkname'] = $billing->getFirstname().' '.$billing->getLastname();
+        $post_data['cvv'] = $this->getInfoInstance()->getAdditionalInformation('cc_cid');
+        
         //$email
         //$phone
         //$address1 =$order->getBillingAddress();
         //$ipaddress
-        //throw new \Magento\Framework\Exception\LocalizedException(__('The capture action is not available.'));        
-	$this->_logger->debug('Error capturado por eduardo gil '.$ccnumber);
+        
+        //curl information
+        $url='https://credomatic.compassmerchantsolutions.com/api/transact.php';
+        $connection = curl_init($url);
+        curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl_connection, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+        curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
+        
+        foreach ( $post_data as $key => $value) {
+            $post_items[] = $key . '=' . $value;
+        }
+        $post_string = implode ('&', $post_items);
+        curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
+        $result = curl_exec($curl_connection);
+        $this->_logger->debug('Resultado del CURL '.$result);
 	throw new \Magento\Framework\Validator\Exception(__('Error de mierda'));
         return $this;
     }

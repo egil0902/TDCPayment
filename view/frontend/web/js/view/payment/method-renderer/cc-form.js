@@ -165,8 +165,6 @@ define(
                         'cc_exp_year': this.creditCardExpYear(),
                         'cc_exp_month': this.creditCardExpMonth(),
                         'cc_number': this.creditCardNumber(),
-                        //'openpay_token': $("#openpay_token").val(),
-                        //'device_session_id': $('#device_session_id').val(),
                         'interest_free': $('#interest_free').val()
                     }
                 };
