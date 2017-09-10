@@ -85,6 +85,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $infoInstance->setAdditionalInformation('cc_exp_month',
             isset($additionalData['cc_exp_month']) ? $additionalData['cc_exp_month'] : null
         );
+
         $infoInstance->setAdditionalInformation('cc_number',
             isset($additionalData['cc_number']) ? $additionalData['cc_number'] : null
         );
@@ -100,49 +101,71 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
 
         /** @var \Magento\Sales\Model\Order\Address $billing */
         $billing = $order->getBillingAddress();
-       
-        
-        $post_data['key'] = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; //poner como parametro en el admin
-        $post_data['key_id'] = '4896565';//poner como parametro en el admin
+	$time = time();
+        $key = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN';
+        $key_id = '4896565';
+        $orderid = $order->getIncrementId();
+	$month = $this->getInfoInstance()->getAdditionalInformation('cc_exp_month');
+	if($month<10){
+		$month='0'.$month;
+	}
+	$year=substr($this->getInfoInstance()->getAdditionalInformation('cc_exp_year'),-2);
+        $post_data['Key'] = $key; //poner como parametro en el admin
         $post_data['type'] = 'sale';
-        $post_data['orderid'] = $order->getIncrementId();
-        $post_data['time'] = time();
-        $post_data['hash'] = md5($orderid."|".$amount."|".$time."|".$key."|".$key_id);
-        $post_data['redirect'] = '';
+	$post_data['time'] = $time;
+        $post_data['orderid'] = $orderid;
+	$post_data['amount'] = number_format((float)$amount, 2, '.', '');
+	$post_data['key_id'] = $key_id;
+	$this->_logger->debug('Hash Data: '.$orderid."|".number_format((float)$amount, 2, '.', '')."|".$time."|".$key);
+        $post_data['hash'] = md5($orderid."|".number_format((float)$amount, 2, '.', '')."|".$time."|".$key);
+        $post_data['redirect'] = '192.168.18.85/recepcion_pago.php';
         $post_data['ccnumber'] = $this->getInfoInstance()->getAdditionalInformation('cc_number');
-        
-        $post_data['ccexp'] = $this->getInfoInstance()->getAdditionalInformation('cc_exp_month').$this->getInfoInstance()->getAdditionalInformation('cc_exp_year');
+        $post_data['ccexp'] = $month.$year;
         $post_data['checkname'] = $billing->getFirstname().' '.$billing->getLastname();
         $post_data['cvv'] = $this->getInfoInstance()->getAdditionalInformation('cc_cid');
-        
-        //$email
-        //$phone
-        //$address1 =$order->getBillingAddress();
-        //$ipaddress
-        
-        //curl information
+	$post_data['email'] = 'egil0902@gmail.com';
+	$post_data['phone'] = '66234016';
+	$post_data['address1'] = 'Panama';
+	$post_data['ipaddress'] = $_SERVER['REMOTE_ADDR'];
         $url='https://credomatic.compassmerchantsolutions.com/api/transact.php';
-        $connection = curl_init($url);
+        $curl_connection = curl_init($url);
         curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
         curl_setopt($curl_connection, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
-        curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
-        
+        curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($curl_connection, CURLOPT_SSL_VERIFYHOST, FALSE);
+	curl_setopt($curl_connection, CURLOPT_HEADER, TRUE);
+        curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, TRUE);
+
         foreach ( $post_data as $key => $value) {
             $post_items[] = $key . '=' . $value;
         }
         $post_string = implode ('&', $post_items);
+	$this->_logger->debug('Se definieron las variables: '.$post_string);
         curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $post_string);
         $result = curl_exec($curl_connection);
-        $this->_logger->debug('Resultado del CURL '.$result);
-	throw new \Magento\Framework\Validator\Exception(__('Error de mierda'));
+	$header_size = curl_getinfo($curl_connection,CURLINFO_HEADER_SIZE);
+	$body = substr( $result, $header_size );
+	$this->_logger->debug('Body del resultado: '.$body);
+	curl_close($curl_connection);
+	$response = explode('|',$body);
+	$this->_logger->debug('Resultado del CURL retorno: '.$response[0]);
+	$resp = array();
+	foreach($response as $response_line){
+		$aux = explode('=',$response_line);
+		$resp[$aux[0]] = $aux[1];
+	}
+	$this->_logger->debug('responsetext: '.$resp['responsetext']);
+	if($resp['response']!=1){
+		//si no paso entonces capturamos la excepcion
+		throw new \Magento\Framework\Validator\Exception(__($resp['responsetext']));
+	}
         return $this;
     }
 
     public function getMonthsInterestFree() {
         $months = explode(',', $this->months_interest_free);
-        if(!in_array('1', $months)) {            
+        if(!in_array('1', $months)) {
             array_unshift($months, '1');
         }        
         return $months;
