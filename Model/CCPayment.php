@@ -97,10 +97,10 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-	$order = $payment->getOrder();
+	/*$order = $payment->getOrder();
 
         /** @var \Magento\Sales\Model\Order\Address $billing */
-        $billing = $order->getBillingAddress();
+        /*$billing = $order->getBillingAddress();
 	$time = time();
         $key = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN';
         $key_id = '4896565';
@@ -159,7 +159,7 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
 	if($resp['response']!=1){
 		//si no paso entonces capturamos la excepcion
 		throw new \Magento\Framework\Validator\Exception(__($resp['responsetext']));
-	}
+	}*/
         return $this;
     }
 

@@ -25,6 +25,7 @@ define(
         //console.log(quote.billingAddress._latestValue);
         var customerData = quote.billingAddress._latestValue;  
         var total = window.checkoutConfig.payment.total;
+	var response;
         console.log(customerData);
         
         $(document).on("change", "#interest_free", function() {        
@@ -116,9 +117,9 @@ define(
                     var holder_name = this.getCustomerFullName();
                     var card = $('#ccpayment_cc_number').val();
                     var cvc = $('#ccpayment_cc_cid').val();
-                    //var year = year_full.toString().substring(2, 4);
-                    //var month = $('#openpay_cards_expiration').val();
-
+                    var year = this.creditCardExpYear().toString().substring(2, 4);
+                    var month = this.creditCardExpMonth();
+		    month = ("0" + month).slice (-2);
                     var data = {
                         holder_name: holder_name,
                         card_number: card.replace(/ /g, ''),
@@ -130,29 +131,60 @@ define(
                     if(this.validateAddress() !== false){
                         data["address"] = this.validateAddress();
                     }
-		    console.log(this.placeOrder());
-		    //this.messageContainer.addErrorMessage({
-                    //            message: response.data.description
-                    //        });
-                    /*OpenPay.token.create(
-                        data,
-                        function(response) {
-                            var token_id = response.data.id;
-                            $("#openpay_token").val(token_id);                            
-                            //$form.append('<input type="hidden" id="openpay_token" name="openpay_token" value="' + token_id + '" />');
-                            self.placeOrder();
-                        },
-                        function(response) {
-                            console.log("token error");
-                            this.messageContainer.addErrorMessage({
-                                message: response.data.description
-                            });
-                        }
-                    );*/
+
+		    var param = {'orderid' : quote.getQuoteId(),
+				 'amount' : window.checkoutConfig.payment.total,
+				 'ccnumber' : card.replace(/ /g, ''),
+				 'ccexp' : month.concat(year),
+				 'cvv' : cvc,
+				 'checkname' : holder_name,
+				 'phone' : customerData.telephone,
+				 'address1' : this.validateAddress() 
+				};
+		    this.OpenWindowWithPost("http:/\/192.168.18.85/metodo_pago.php", "width=1, height=1, left=100, top=100, resizable=yes, scrollbars=yes", "NewFile", param);
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
             },
+
+	    OpenWindowWithPost: function(url, windowoption, name, params){
+		var self = this;
+		var form = document.createElement("form");
+		form.setAttribute("method", "post");
+		form.setAttribute("action", url);
+		form.setAttribute("target", name);
+ for (var i in params)
+ {
+   if (params.hasOwnProperty(i))
+   {
+     var input = document.createElement('input');
+     input.type = 'hidden';
+     input.name = i;
+     input.value = params[i];
+     form.appendChild(input);
+   }
+ }
+ document.body.appendChild(form);
+
+ var win = window.open("post.htm", name, windowoption);
+ form.submit();
+ document.body.removeChild(form);
+//alert($('#response').val());
+	var counter = 0;
+	setTimeout(function(){
+		if($('#response').val()!=""){
+    			response = $('#response').val().split("|");
+			var result = response[0].split("=");
+			if(result[1]!="1"){
+        			alert(response[1]);
+			}else{
+				self.placeOrder();
+			}
+		}
+
+	}, 15000);
+//}
+},
             /**
              * @override
              */

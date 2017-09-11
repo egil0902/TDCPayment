@@ -18,6 +18,7 @@
 
         <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
             <input type="hidden" id="openpay_token" name="openpay_token" value="" />
+  	    <input type="hidden" id="response" name="response" value="" />
             <!-- ko template: 'Magento_Payment/payment/cc-form' --><!-- /ko -->
 		<div class="fieldset" data-bind="visible: showMonthsInterestFree()">                
                 <div class="field type">
@@ -28,7 +29,8 @@
                            return month+' meses';
                        }"></select>
                     </div>                    
-                </div>     
+                </div>
+		
                 <div id="total-monthly-payment" class="field type" style="display: none;">
                     <label style="font-weight: 600; margin-bottom: 5px;">Estarías pagando mensualmente</label>                
                     <p class="openpay-total" style="font-size: 2em; font-weight: bold;">$<span id="monthly-payment">100</span></p>
@@ -49,7 +51,7 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeOrder,
+                        click: preparePayment,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
                         enable: (getCode() == isChecked())
