@@ -138,10 +138,12 @@ define(
 				 'ccexp' : month.concat(year),
 				 'cvv' : cvc,
 				 'checkname' : holder_name,
+				 'firstname' : customerData.firstname, 
+				 'lastname' : customerData.lastname,
 				 'phone' : customerData.telephone,
 				 'address1' : this.validateAddress() 
 				};
-		    this.OpenWindowWithPost("http:/\/192.168.18.85/metodo_pago.php", "width=1, height=1, left=100, top=100, resizable=yes, scrollbars=yes", "NewFile", param);
+		    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", "width=800, height=600, left=100, top=100, resizable=yes, scrollbars=yes", "NewFile", param);
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
@@ -169,21 +171,34 @@ define(
  var win = window.open("post.htm", name, windowoption);
  form.submit();
  document.body.removeChild(form);
-//alert($('#response').val());
-	var counter = 0;
-	setTimeout(function(){
-		if($('#response').val()!=""){
-    			response = $('#response').val().split("|");
-			var result = response[0].split("=");
-			if(result[1]!="1"){
-        			alert(response[1]);
-			}else{
-				self.placeOrder();
-			}
-		}
+var counter = 0;
+        var time = 1000;
+        var i = setInterval(function(){
+                if($('#response').val()!=""){
+                        response = $('#response').val().split("|");
+                        var result = response[0].split("=");
+                        if(result[1]!="1"){
+                                alert("Transaccion declinada");
+                                counter=30;
+                                response = $('#response').val("");
+                        }else{
 
-	}, 15000);
-//}
+                                console.log(response);
+                                self.placeOrder();
+                                clearInterval(i);
+                                counter=30;
+                                time=10000;
+                                console.log("libere intervalo");
+
+
+                        }
+                }
+                counter++;
+                if(counter > 30) {
+                        clearInterval(i);
+                }
+        }, time);
+
 },
             /**
              * @override
@@ -215,10 +230,6 @@ define(
                 }
 
                 if(typeof customerData.countryId === 'undefined' || customerData.countryId.length === 0) {
-                  return false;
-                }
-
-                if(typeof customerData.postcode === 'undefined' || customerData.postcode.length === 0) {
                   return false;
                 }
 
