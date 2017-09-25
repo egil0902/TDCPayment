@@ -15,9 +15,12 @@ define(
         'jquery',
         'Magento_Checkout/js/model/quote',
         'Magento_Customer/js/model/customer',
-        'Magento_Payment/js/model/credit-card-validation/validator'
+        'Magento_Payment/js/model/credit-card-validation/validator',
+	'Magento_Checkout/js/model/payment/additional-validators',
+	'Magento_Checkout/js/model/full-screen-loader',
+	'Magento_Checkout/js/action/redirect-on-success'
     ],
-    function (Component, $, quote, customer) {
+    function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction) {
         'use strict';
 
         //console.log(window.checkoutConfig.customerData);
@@ -48,7 +51,7 @@ define(
         });
 
         return Component.extend({
-
+	    redirectAfterPlaceOrder: true,
             defaults: {
                 template: 'CDS_CCPayment/payment/ccpayment-form'
             },
@@ -98,22 +101,20 @@ define(
             
             /**
              * Prepare and process payment information
-             */
-            preparePayment: function () {
+	             */
+            preparePayment: function (p_type,p_transactionid) {
+		var type = 'auth';
+		if(p_type!=='undefined'){
+			type=p_type;
+		}
+		var transactionid='undefined';
+		if(p_transactionid!=='undefined'){
+                        transactionid=p_transactionid;
+                }
                 var $form = $('#' + this.getCode() + '-form');
 
                 if($form.validation() && $form.validation('isValid')){
                     this.messageContainer.clear();
-
-                    //var isSandbox = window.checkoutConfig.payment.openpay_credentials.is_sandbox === "0" ? false : true;
-                    //OpenPay.setId(window.checkoutConfig.payment.openpay_credentials.merchant_id);
-                    //OpenPay.setApiKey(window.checkoutConfig.payment.openpay_credentials.public_key);
-                    //OpenPay.setSandboxMode(isSandbox);                    
-
-                    //antifraudes
-                    //OpenPay.deviceData.setup(this.getCode() + '-form', "device_session_id");
-
-                    //var year_full = $('#openpay_cards_expiration_yr').val();
                     var holder_name = this.getCustomerFullName();
                     var card = $('#ccpayment_cc_number').val();
                     var cvc = $('#ccpayment_cc_cid').val();
@@ -123,8 +124,6 @@ define(
                     var data = {
                         holder_name: holder_name,
                         card_number: card.replace(/ /g, ''),
-                        //expiration_month: month || 0,
-                        //expiration_year: year,
                         cvv2: cvc
                     };
 
@@ -141,68 +140,110 @@ define(
 				 'firstname' : customerData.firstname, 
 				 'lastname' : customerData.lastname,
 				 'phone' : customerData.telephone,
-				 'address1' : this.validateAddress() 
+				 'address1' : this.validateAddress(),
+				 'type' : type,
+				 'transactionid': transactionid
 				};
-		    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", "width=800, height=600, left=100, top=100, resizable=yes, scrollbars=yes", "NewFile", param);
+		    return this.OpenWindowWithPost("http:/\/192.168.0.104/metodo_pago.php", type, "NewFile", param);
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
             },
 
-	    OpenWindowWithPost: function(url, windowoption, name, params){
+	    OpenWindowWithPost: function(url, type, name, params){
 		var self = this;
+		var iframe = document.getElementById("iframeBAC");
 		var form = document.createElement("form");
 		form.setAttribute("method", "post");
 		form.setAttribute("action", url);
-		form.setAttribute("target", name);
- for (var i in params)
- {
-   if (params.hasOwnProperty(i))
-   {
-     var input = document.createElement('input');
-     input.type = 'hidden';
-     input.name = i;
-     input.value = params[i];
-     form.appendChild(input);
-   }
- }
- document.body.appendChild(form);
+		form.setAttribute("target", "iframeBAC");
+		for (var i in params)
+		{
+			if (params.hasOwnProperty(i))
+			{
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = i;
+				input.value = params[i];
+				form.appendChild(input);
+   			}
+		}
+		var doc = iframe.contentDocument || iframe.contentWindow.document;
+		doc.body.appendChild(form);
+		form.submit();
+		var counter = 0;
+		var time = 1000;
+		var resp=false;
+		var i = setInterval(function(){
+                		if($('#response').val()!=""){
+                        		response = $('#response').val().split("|");
+                        		var result = response[0].split("=");
+                        		if(result[1]!="1"){
+                                		alert("Transaccion declinada");
+                                		counter=30;
+                                		response = $('#response').val("");
+                        		}else{
+                                		console.log(response);
+						if(type==='auth'){
+                                			self.placeOrder();
+						}else if(type==='void'){
+								self.isPlaceOrderActionAllowed(true);
+                                                		fullScreenLoader.stopLoader();
 
- var win = window.open("post.htm", name, windowoption);
- form.submit();
- document.body.removeChild(form);
-var counter = 0;
-        var time = 1000;
-        var i = setInterval(function(){
-                if($('#response').val()!=""){
-                        response = $('#response').val().split("|");
-                        var result = response[0].split("=");
-                        if(result[1]!="1"){
-                                alert("Transaccion declinada");
-                                counter=30;
-                                response = $('#response').val("");
-                        }else{
+						}else{
+							if (self.redirectAfterPlaceOrder) {
+                                                        redirectOnSuccessAction.execute();
+                                                }
 
-                                console.log(response);
-                                self.placeOrder();
-                                clearInterval(i);
-                                counter=30;
-                                time=10000;
-                                console.log("libere intervalo");
+                                		clearInterval(i);
+                                		counter=30;
+                                		time=10000;
+                        		}
+                		}
+                		counter++;
+                		if(counter > 30) {
+                        		clearInterval(i);
+                		}
+        		}, time);
+//		return resp;
 
-
-                        }
-                }
-                counter++;
-                if(counter > 30) {
-                        clearInterval(i);
-                }
-        }, time);
-
-},
+	    },
             /**
              * @override
              */
+	    placeOrder: function (data, event) {
+    var self = this;
+
+    if (event) {
+        event.preventDefault();
+    }
+
+    if (this.validate() && additionalValidators.validate()) {
+        this.isPlaceOrderActionAllowed(false);
+
+        this.getPlaceOrderDeferredObject()
+            .fail(
+                function () {
+			response = $('#response').val().split("|");
+                        var result = response[3].split("=");
+			response = $('#response').val("");
+			self.preparePayment('void',result[1]);
+                    //self.isPlaceOrderActionAllowed(true);
+                }
+            ).done(
+                function () {
+			response = $('#response').val().split("|");
+                        var result = response[3].split("=");
+                        response = $('#response').val("");
+                    	self.preparePayment('capture',result[1]);
+                }
+            );
+
+        return true;
+    }
+
+    return false;
+},
             getData: function () {
                 return {
                     'method': "ccpayment",
@@ -244,7 +285,7 @@ var counter = 0;
                 var address = {
                     city: customerData.city,
                     country_code: customerData.countryId,
-                    postal_code: customerData.postcode,
+                    postal_code: "622",
                     state: customerData.region,
                     line1: customerData.street[0],
                     line2: customerData.street[1]
