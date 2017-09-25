@@ -144,7 +144,7 @@ define(
 				 'type' : type,
 				 'transactionid': transactionid
 				};
-		    return this.OpenWindowWithPost("http:/\/192.168.0.104/metodo_pago.php", type, "NewFile", param);
+		    return this.OpenWindowWithPost("http:/\/www.panafoto.com/metodo_pago.php", type, "NewFile", param);
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
@@ -192,7 +192,8 @@ define(
 
 						}else{
 							if (self.redirectAfterPlaceOrder) {
-                                                        redirectOnSuccessAction.execute();
+                                                            redirectOnSuccessAction.execute();
+                                                        }
                                                 }
 
                                 		clearInterval(i);
@@ -212,38 +213,38 @@ define(
              * @override
              */
 	    placeOrder: function (data, event) {
-    var self = this;
+                var self = this;
 
-    if (event) {
-        event.preventDefault();
-    }
-
-    if (this.validate() && additionalValidators.validate()) {
-        this.isPlaceOrderActionAllowed(false);
-
-        this.getPlaceOrderDeferredObject()
-            .fail(
-                function () {
-			response = $('#response').val().split("|");
-                        var result = response[3].split("=");
-			response = $('#response').val("");
-			self.preparePayment('void',result[1]);
-                    //self.isPlaceOrderActionAllowed(true);
+                if (event) {
+                    event.preventDefault();
                 }
-            ).done(
-                function () {
-			response = $('#response').val().split("|");
-                        var result = response[3].split("=");
-                        response = $('#response').val("");
-                    	self.preparePayment('capture',result[1]);
+
+                if (this.validate() && additionalValidators.validate()) {
+                    this.isPlaceOrderActionAllowed(false);
+
+                    this.getPlaceOrderDeferredObject()
+                        .fail(
+                            function () {
+                                    response = $('#response').val().split("|");
+                                    var result = response[3].split("=");
+                                    response = $('#response').val("");
+                                    self.preparePayment('void',result[1]);
+                                //self.isPlaceOrderActionAllowed(true);
+                            }
+                        ).done(
+                            function () {
+                                    response = $('#response').val().split("|");
+                                    var result = response[3].split("=");
+                                    response = $('#response').val("");
+                                    self.preparePayment('capture',result[1]);
+                            }
+                        );
+
+                    return true;
                 }
-            );
 
-        return true;
-    }
-
-    return false;
-},
+                return false;
+            },
             getData: function () {
                 return {
                     'method': "ccpayment",
