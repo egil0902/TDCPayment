@@ -144,7 +144,7 @@ define(
 				 'type' : type,
 				 'transactionid': transactionid
 				};
-		    return this.OpenWindowWithPost("http:/\/www.panafoto.com/metodo_pago.php", type, "NewFile", param);
+		    return this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile", param);
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
@@ -152,6 +152,8 @@ define(
 
 	    OpenWindowWithPost: function(url, type, name, params){
 		var self = this;
+		self.isPlaceOrderActionAllowed(false);
+                fullScreenLoader.startLoader();
 		var iframe = document.getElementById("iframeBAC");
 		var form = document.createElement("form");
 		form.setAttribute("method", "post");
@@ -178,13 +180,19 @@ define(
                 		if($('#response').val()!=""){
                         		response = $('#response').val().split("|");
                         		var result = response[0].split("=");
+					console.log(response);
                         		if(result[1]!="1"){
                                 		alert("Transaccion declinada");
                                 		counter=30;
                                 		response = $('#response').val("");
+						self.isPlaceOrderActionAllowed(true);
+                                                fullScreenLoader.stopLoader();
                         		}else{
-                                		console.log(response);
+                                	
 						if(type==='auth'){
+							clearInterval(i);
+                                                	counter=30;
+                                                	time=10000;							
                                 			self.placeOrder();
 						}else if(type==='void'){
 								self.isPlaceOrderActionAllowed(true);
@@ -225,8 +233,11 @@ define(
                     this.getPlaceOrderDeferredObject()
                         .fail(
                             function () {
+				    console.log("Place Order fail.");
                                     response = $('#response').val().split("|");
                                     var result = response[3].split("=");
+				    console.log(response);
+                                    console.log(result[1]);
                                     response = $('#response').val("");
                                     self.preparePayment('void',result[1]);
                                 //self.isPlaceOrderActionAllowed(true);
@@ -235,6 +246,8 @@ define(
                             function () {
                                     response = $('#response').val().split("|");
                                     var result = response[3].split("=");
+				    console.log(response);
+				    console.log(result[1]);
                                     response = $('#response').val("");
                                     self.preparePayment('capture',result[1]);
                             }
