@@ -64,7 +64,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
                 $config['payment']['ccform']["hasSsCardType"][$code] = false;
                 $config['payment']['ccform']["months"][$code] = $this->getMonths();
                 $config['payment']['ccform']["years"][$code] = $this->getYears();
-                $config['payment']['ccform']["cvvImageUrl"][$code] = "http:/\/".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
+                $config['payment']['ccform']["cvvImageUrl"][$code] = "https:/\/".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
                 $config['payment']['ccform']["ssStartYears"][$code] = $this->getStartYears();
                 $config['payment']['bines'] = $this->getBines();
             }

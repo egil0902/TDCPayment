@@ -147,7 +147,7 @@ define(
 				 'type' : type,
 				 'transactionid': transactionid
 				};
-                    if(p_type!=='undefined' && p_transactionid!=='undefined'){
+                    if(p_type==='undefined' && p_transactionid==='undefined'){
                         this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",param); 
                     }
                     return  param;
