@@ -147,7 +147,10 @@ define(
 				 'type' : type,
 				 'transactionid': transactionid
 				};
-		    return this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile", param);
+                    if(p_type!=='undefined' && p_transactionid!=='undefined'){
+                        this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",param); 
+                    }
+                    return  param;
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
@@ -178,7 +181,7 @@ define(
 		form.submit();
 		var counter = 0;
 		var time = 1000;
-		var resp=false;
+		
 		var i = setInterval(function(){
                 		if($('#response').val()!=""){
                         		response = $('#response').val().split("|");
@@ -187,13 +190,15 @@ define(
                         		if(result[1]!="1"){
                                 		alert("Transaccion declinada");
                                 		counter=30;
-                                		response = $('#response').val("");
+                                		
 						self.isPlaceOrderActionAllowed(true);
                                                 fullScreenLoader.stopLoader();
 						if(type==='capture'){
 							var resultCaptureFail = response[3].split("=");
-							self.preparePayment('void',resultCaptureFail[1]);
+                                                        response = $('#response').val("");
+							this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('void',resultCaptureFail[1]));
 						}
+                                                response = $('#response').val("");
                         		}else{
                                 	
 						if(type==='auth'){
@@ -202,8 +207,8 @@ define(
                                                 	time=10000;							
                                 			self.placeOrder();
 						}else if(type==='void'){
-								self.isPlaceOrderActionAllowed(true);
-                                                		fullScreenLoader.stopLoader();
+							self.isPlaceOrderActionAllowed(true);
+                                                	fullScreenLoader.stopLoader();
 
 						}else{
 							if (self.redirectAfterPlaceOrder) {
@@ -221,7 +226,7 @@ define(
                         		clearInterval(i);
                 		}
         		}, time);
-//		return resp;
+
 
 	    },
             /**
@@ -246,7 +251,7 @@ define(
 				    console.log(response);
                                     console.log(result[1]);
                                     response = $('#response').val("");
-                                    self.preparePayment('void',result[1]);
+                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('void',result[1]));
                             
                             }
                         ).done(
@@ -256,7 +261,7 @@ define(
 				    console.log(response);
 				    console.log(result[1]);
                                     response = $('#response').val("");
-                                    self.preparePayment('capture',result[1]);
+                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('capture',result[1]));
                             }
                         );
                     return true;
