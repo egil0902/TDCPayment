@@ -57,7 +57,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
  //               $config['textdd'] = "for is aviable";
                 //$config['payment']['openpay_credentials'] = array("merchant_id" => $this->payment->getMerchantId(), "public_key" => $this->payment->getPublicKey(), "is_sandbox"  => $this->payment->isSanbox());                 
                 $config['payment']['months_interest_free'] = $this->payment->getMonthsInterestFree();
-                $config['payment']['total'] = $this->cart->getQuote()->getGrandTotal();
+                $config['payment']['total'] = $this->cart->getQuote()->getGrandTotal()+$this->cart->getQuote()->getShippingAmount();
                 $config['payment']['minimum_amount'] = $this->payment->getMinimumAmount();
                 $config['payment']['ccform']["availableTypes"][$code] = array("AE" => "American Express", "VI" => "Visa", "MC" => "MasterCard"); 
                 $config['payment']['ccform']["hasVerification"][$code] = true;

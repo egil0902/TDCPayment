@@ -22,12 +22,9 @@ define(
     ],
     function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction) {
         'use strict';
-
-        //console.log(window.checkoutConfig.customerData);
-        //console.log(customer.customerData);
-        //console.log(quote.billingAddress._latestValue);
         var customerData = quote.billingAddress._latestValue;  
         var total = window.checkoutConfig.payment.total;
+	console.log(total);
 	var response;
         console.log(customerData);
         
@@ -51,7 +48,9 @@ define(
         });
 
         return Component.extend({
+
 	    redirectAfterPlaceOrder: true,
+
             defaults: {
                 template: 'CDS_CCPayment/payment/ccpayment-form'
             },
@@ -90,19 +89,22 @@ define(
             },
             
             showMonthsInterestFree: function() {
-                var self = this;
+                /*var self = this;
                 var months = this.getMonthsInterestFree();//window.checkoutConfig.payment.months_interest_free;         
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
                 total = parseInt(total);
                 
-                return (months.length > 1 && total >= minimum_amount) ? true : false;                
+                return (months.length > 1 && total >= minimum_amount) ? true : false;                */
+		return false;
             },
             
             /**
              * Prepare and process payment information
 	             */
             preparePayment: function (p_type,p_transactionid) {
+		console.log(p_type);
+		console.log(p_transactionid);
 		var type = 'auth';
 		if(p_type!=='undefined'){
 			type=p_type;
@@ -130,9 +132,10 @@ define(
                     if(this.validateAddress() !== false){
                         data["address"] = this.validateAddress();
                     }
-
+		    console.log("Imprimiento el total");
+		    console.log(total);
 		    var param = {'orderid' : quote.getQuoteId(),
-				 'amount' : window.checkoutConfig.payment.total,
+				 'amount' : total,
 				 'ccnumber' : card.replace(/ /g, ''),
 				 'ccexp' : month.concat(year),
 				 'cvv' : cvc,
@@ -187,6 +190,10 @@ define(
                                 		response = $('#response').val("");
 						self.isPlaceOrderActionAllowed(true);
                                                 fullScreenLoader.stopLoader();
+						if(type==='capture'){
+							var resultCaptureFail = response[3].split("=");
+							self.preparePayment('void',resultCaptureFail[1]);
+						}
                         		}else{
                                 	
 						if(type==='auth'){
@@ -240,7 +247,7 @@ define(
                                     console.log(result[1]);
                                     response = $('#response').val("");
                                     self.preparePayment('void',result[1]);
-                                //self.isPlaceOrderActionAllowed(true);
+                            
                             }
                         ).done(
                             function () {
@@ -252,10 +259,8 @@ define(
                                     self.preparePayment('capture',result[1]);
                             }
                         );
-
                     return true;
                 }
-
                 return false;
             },
             getData: function () {
