@@ -193,11 +193,11 @@ define(
                                 		
 						self.isPlaceOrderActionAllowed(true);
                                                 fullScreenLoader.stopLoader();
-						if(type==='capture'){
+						/*if(type==='capture'){
 							var resultCaptureFail = response[3].split("=");
                                                         response = $('#response').val("");
-							self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('void',resultCaptureFail[1]));
-						}
+							self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'void', "NewFile",self.preparePayment('void',resultCaptureFail[1]));
+						}*/
                                                 response = $('#response').val("");
                         		}else{
 						if(type==='auth'){
