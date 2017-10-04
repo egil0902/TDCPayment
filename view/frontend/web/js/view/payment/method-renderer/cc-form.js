@@ -18,13 +18,17 @@ define(
         'Magento_Payment/js/model/credit-card-validation/validator',
 	'Magento_Checkout/js/model/payment/additional-validators',
 	'Magento_Checkout/js/model/full-screen-loader',
-	'Magento_Checkout/js/action/redirect-on-success'
+	'Magento_Checkout/js/action/redirect-on-success',
+	'Magento_Checkout/js/model/totals'	
     ],
-    function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction) {
+    function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction,totals) {
         'use strict';
         var customerData = quote.billingAddress._latestValue;  
-        var total = window.checkoutConfig.payment.total;
+        //var total = window.checkoutConfig.payment.total;
+	var total = quote.totals()['base_grand_total'];
 	console.log(total);
+	console.log(quote.totals);
+        console.log(quote.totals());
 	var response;
         console.log(customerData);
         
@@ -48,7 +52,7 @@ define(
         });
 
         return Component.extend({
-
+	    totals: quote.getTotals(),
 	    redirectAfterPlaceOrder: true,
             
             defaults: {
@@ -103,6 +107,8 @@ define(
              * Prepare and process payment information
 	             */
             preparePayment: function (p_type,p_transactionid) {
+		console.log("total en prepare payment");
+		console.log(quote.totals()['base_grand_total']);
 		console.log(p_type);
 		console.log(p_transactionid);
 		var type = 'auth';
@@ -132,10 +138,9 @@ define(
                     if(this.validateAddress() !== false){
                         data["address"] = this.validateAddress();
                     }
-		    console.log("Imprimiento el total");
-		    console.log(total);
+		  
 		    var param = {'orderid' : quote.getQuoteId(),
-				 'amount' : total,
+				 'amount' : quote.totals()['base_grand_total'],
 				 'ccnumber' : card.replace(/ /g, ''),
 				 'ccexp' : month.concat(year),
 				 'cvv' : cvc,
