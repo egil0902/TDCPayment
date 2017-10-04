@@ -189,8 +189,9 @@ define(
 					console.log(response);
                         		if(result[1]!="1"){
                                 		alert("Transaccion declinada");
-                                		counter=30;
-                                		
+                                		clearInterval(i);
+                                                counter=30;
+                                                time=10000;
 						self.isPlaceOrderActionAllowed(true);
                                                 fullScreenLoader.stopLoader();
 						/*if(type==='capture'){
@@ -199,6 +200,7 @@ define(
 							self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'void', "NewFile",self.preparePayment('void',resultCaptureFail[1]));
 						}*/
                                                 response = $('#response').val("");
+                                                
                         		}else{
 						if(type==='auth'){
                                                     clearInterval(i);
