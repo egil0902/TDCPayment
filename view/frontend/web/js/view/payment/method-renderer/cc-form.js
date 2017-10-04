@@ -50,7 +50,7 @@ define(
         return Component.extend({
 
 	    redirectAfterPlaceOrder: true,
-
+            
             defaults: {
                 template: 'CDS_CCPayment/payment/ccpayment-form'
             },
@@ -200,22 +200,20 @@ define(
 						}
                                                 response = $('#response').val("");
                         		}else{
-                                	
 						if(type==='auth'){
-							clearInterval(i);
-                                                	counter=30;
-                                                	time=10000;							
-                                			self.placeOrder();
+                                                    clearInterval(i);
+                                                    counter=30;
+                                                    time=10000;
+                                                    self.placeOrder();
 						}else if(type==='void'){
-							self.isPlaceOrderActionAllowed(true);
-                                                	fullScreenLoader.stopLoader();
+                                                    self.isPlaceOrderActionAllowed(true);
+                                                    fullScreenLoader.stopLoader();
 
 						}else{
-							if (self.redirectAfterPlaceOrder) {
-                                                            redirectOnSuccessAction.execute();
-                                                        }
+                                                    if (self.redirectAfterPlaceOrder) {
+                                                        redirectOnSuccessAction.execute();
+                                                    }
                                                 }
-
                                 		clearInterval(i);
                                 		counter=30;
                                 		time=10000;
@@ -251,7 +249,7 @@ define(
 				    console.log(response);
                                     console.log(result[1]);
                                     response = $('#response').val("");
-                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('void',result[1]));
+                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'void', "NewFile",self.preparePayment('void',result[1]));
                             
                             }
                         ).done(
@@ -261,7 +259,7 @@ define(
 				    console.log(response);
 				    console.log(result[1]);
                                     response = $('#response').val("");
-                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",self.preparePayment('capture',result[1]));
+                                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'capture', "NewFile",self.preparePayment('capture',result[1]));
                             }
                         );
                     return true;
