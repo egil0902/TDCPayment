@@ -18,17 +18,16 @@ define(
         'Magento_Payment/js/model/credit-card-validation/validator',
 	'Magento_Checkout/js/model/payment/additional-validators',
 	'Magento_Checkout/js/model/full-screen-loader',
-	'Magento_Checkout/js/action/redirect-on-success',
-	'Magento_Checkout/js/model/totals'	
+	'Magento_Checkout/js/action/redirect-on-success'	
     ],
-    function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction,totals) {
+    function (Component, $, quote, customer,validator,additionalValidators,fullScreenLoader,redirectOnSuccessAction) {
         'use strict';
         var customerData = quote.billingAddress._latestValue;  
         //var total = window.checkoutConfig.payment.total;
 	var total = quote.totals()['base_grand_total'];
 	console.log(total);
-	console.log(quote.totals);
-        console.log(quote.totals());
+	
+        console.log(customer);
 	var response;
         console.log(customerData);
         
@@ -52,7 +51,7 @@ define(
         });
 
         return Component.extend({
-	    totals: quote.getTotals(),
+	    
 	    redirectAfterPlaceOrder: true,
             
             defaults: {
@@ -77,16 +76,15 @@ define(
                                 if(bines[i]['6MONTH']=='Y'){
                                         months[1]=monthsAux[1];
                                 }
-
                                 if(bines[i]['12MONTH']=='Y'){
                                         months[2]=monthsAux[2];
                                 }
                                 if(bines[i]['18MONTH']=='Y'){
                                         months[3]=monthsAux[3];
                                 }
-                                if(bines[i]['24MONTH']=='Y')
+                                if(bines[i]['24MONTH']=='Y'){
                                         months[4]=monthsAux[4];
-
+                                }
                         }
                 }
                 return months;
@@ -107,10 +105,6 @@ define(
              * Prepare and process payment information
 	             */
             preparePayment: function (p_type,p_transactionid) {
-		console.log("total en prepare payment");
-		console.log(quote.totals()['base_grand_total']);
-		console.log(p_type);
-		console.log(p_transactionid);
 		var type = 'auth';
 		if(p_type!=='undefined'){
 			type=p_type;
