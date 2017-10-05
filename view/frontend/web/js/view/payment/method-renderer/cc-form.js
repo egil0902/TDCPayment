@@ -105,6 +105,12 @@ define(
              * Prepare and process payment information
 	             */
             preparePayment: function (p_type,p_transactionid) {
+                //update customer data
+                customerData = quote.billingAddress._latestValue;
+                console.log("Update customer data");
+                console.log(customerData);
+                console.log("Update total");
+                console.log(quote.totals()['base_grand_total']);
 		var type = 'auth';
 		if(p_type!=='undefined'){
 			type=p_type;
@@ -140,8 +146,8 @@ define(
 				 'ccexp' : month.concat(year),
 				 'cvv' : cvc,
 				 'checkname' : holder_name,
-				 'firstname' : customer['customerData']['firstname'], 
-				 'lastname' : customer['customerData']['lastname'],
+				 'firstname' : customerData.firstname, 
+				 'lastname' : customerData.lastname,
 				 'phone' : customerData.telephone,
 				 'address1' : this.validateAddress(),
 				 'type' : type,
@@ -286,7 +292,7 @@ define(
                 return $form.validation() && $form.validation('isValid');
             },
             getCustomerFullName: function() {
-                return customer['customerData']['firstname']+' '+customer['customerData']['lastname'];
+                return customerData.firstname+' '+customerData.lastname;
             },
             validateAddress: function() {
 
