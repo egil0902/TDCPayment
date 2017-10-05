@@ -117,6 +117,7 @@ define(
 
                 if($form.validation() && $form.validation('isValid')){
                     this.messageContainer.clear();
+                    console.log(this.getCustomerFullName());
                     var holder_name = this.getCustomerFullName();
                     var card = $('#ccpayment_cc_number').val();
                     var cvc = $('#ccpayment_cc_cid').val();
