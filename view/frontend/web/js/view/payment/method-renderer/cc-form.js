@@ -139,8 +139,8 @@ define(
 				 'ccexp' : month.concat(year),
 				 'cvv' : cvc,
 				 'checkname' : holder_name,
-				 'firstname' : customerData.firstname, 
-				 'lastname' : customerData.lastname,
+				 'firstname' : customer['customerData']['firstname'], 
+				 'lastname' : customer['customerData']['lastname'],
 				 'phone' : customerData.telephone,
 				 'address1' : this.validateAddress(),
 				 'type' : type,
@@ -284,8 +284,8 @@ define(
                 var $form = $('#' + this.getCode() + '-form');
                 return $form.validation() && $form.validation('isValid');
             },
-            getCustomerFullName: function() {                
-                return customerData.firstname+' '+customerData.lastname;                
+            getCustomerFullName: function() {
+                return customer['customerData']['firstname']+' '+customer['customerData']['lastname'];
             },
             validateAddress: function() {
 
