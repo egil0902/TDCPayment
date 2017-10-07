@@ -51,7 +51,7 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: preparePayment.bind($data,'undefined','undefined')
+                        click: placeOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
                         enable: (getCode() == isChecked())
