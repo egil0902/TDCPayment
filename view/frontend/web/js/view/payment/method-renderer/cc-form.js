@@ -1,10 +1,9 @@
 /**
  * Openpay_Cards Magento JS component
  *
- * @category    Openpay
- * @package     Openpay_Cards
- * @author      Federico Balderas
- * @copyright   Openpay (http://openpay.mx)
+ * @category    CCPayment
+ * @package     CDS_CCPayment
+ * @author      Eduardo Gil
  * @license     http://www.apache.org/licenses/LICENSE-2.0  Apache License Version 2.0
  */
 /*browser:true*/
@@ -169,7 +168,7 @@ define(
 
 		console.log(param);
                     
-                    this.OpenWindowWithPost("http:/\/144.217.34.60/metodo_pago.php", type, "NewFile",param);
+                    this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",param);
                   
                 }else{
                     return $form.validation() && $form.validation('isValid');
@@ -242,18 +241,15 @@ define(
 					
                         		if(result[1]!="1"){
 						$('#popup-modal').modal('closeModal');						
-						require([
-    'Magento_Ui/js/modal/alert'
-], function(alert) {  
-    alert({
-        title: 'Resultado de la Transaccion',
-        content: '*** Fallida ***',
-        actions: {
-            always: function(){}
-        }
-    });
- 
-});
+						require(['Magento_Ui/js/modal/alert'], 
+                                                    function(alert) {  
+                                                        alert({
+                                                           title: 'Resultado de la Transaccion',
+                                                           content: '*** Fallida ***',
+                                                           actions: {
+                                                               always: function(){}
+                                                           }});
+                                                    });
                         		}else{
 						
 						self.placeOrder();
