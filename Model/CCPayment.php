@@ -27,10 +27,10 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
  
     protected $_isGateway                   = true;
-    protected $_canCapture                  = true;
-    protected $_canCapturePartial           = true;
+    protected $_canCapture                  = false;
+    protected $_canCapturePartial           = false;
     protected $_canRefund                   = true;
-    
+    protected $_canAuthorize                = true;
     protected $months_interest_free;   
     protected $minimum_amount;
  
@@ -92,10 +92,14 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $infoInstance->setAdditionalInformation('interest_free',
             isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
         );
+	$infoInstance->setAdditionalInformation('paymentResponse',
+            isset($additionalData['paymentResponse']) ? $additionalData['paymentResponse'] : null
+        );
+
         return $this;
     }
  
-    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
 	/*$order = $payment->getOrder();
 

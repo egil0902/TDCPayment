@@ -53,7 +53,8 @@ define(
         return Component.extend({
 	    
 	    redirectAfterPlaceOrder: true,
-            
+            paymentResponse: null,
+
             defaults: {
                 template: 'CDS_CCPayment/payment/ccpayment-form'
             },
@@ -91,16 +92,25 @@ define(
             },
             
             showMonthsInterestFree: function() {
-                /*var self = this;
-                var months = this.getMonthsInterestFree();//window.checkoutConfig.payment.months_interest_free;         
+                var self = this;
+                var months = this.getMonthsInterestFree();
                 var minimum_amount = window.checkoutConfig.payment.minimum_amount;         
                 var total = window.checkoutConfig.payment.total;
                 total = parseInt(total);
                 
-                return (months.length > 1 && total >= minimum_amount) ? true : false;                */
+                return (months.length > 1 && total >= minimum_amount) ? true : false;
 		return false;
             },
-            
+            getProcessorID : function (months){
+                console.log(months)
+                if(months==='6'){ return 'panafototc6';}
+                if(months==='12'){ return 'panafototc12';}
+                if(months==='18'){ return 'panafototc18';}
+                if(months==='24'){ return 'panafototc24';}
+                return 'panafotocn01';
+
+            },
+
             /**
              * Prepare and process payment information
 	             */
@@ -111,14 +121,8 @@ define(
                 console.log(customerData);
                 console.log("Update total");
                 console.log(quote.totals()['base_grand_total']);
-		var type = 'auth';
-		if(p_type!=='undefined'){
-			type=p_type;
-		}
-		var transactionid='undefined';
-		if(p_transactionid!=='undefined'){
-                        transactionid=p_transactionid;
-                }
+
+		var type = p_type;		
                 var $form = $('#' + this.getCode() + '-form');
 
                 if($form.validation() && $form.validation('isValid')){
@@ -138,8 +142,10 @@ define(
 
                     if(this.validateAddress() !== false){
                         data["address"] = this.validateAddress();
-                    }
-		  
+                    }else{
+			return this.validateAddress();
+		    }
+		    
 		    var param = {'orderid' : quote.getQuoteId(),
 				 'amount' : quote.totals()['base_grand_total'],
 				 'ccnumber' : card.replace(/ /g, ''),
@@ -150,13 +156,21 @@ define(
 				 'lastname' : customerData.lastname,
 				 'phone' : customerData.telephone,
 				 'address1' : this.validateAddress(),
-				 'type' : type,
-				 'transactionid': transactionid
+				 'type' : type
 				};
-                    if(p_type==='undefined' && p_transactionid==='undefined'){
-                        this.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", type, "NewFile",param); 
-                    }
-                    return  param;
+		var transactionid='undefined';
+                if(p_transactionid!=='undefined'){
+                        transactionid=p_transactionid;
+			param['transactionid']=p_transactionid;
+                }
+		if($('#interest_free').val()!==''){
+                        param['processor_id']=this.getProcessorID($('#interest_free').val());
+                }
+
+		console.log(param);
+                    
+                    this.OpenWindowWithPost("http:/\/144.217.34.60/metodo_pago.php", type, "NewFile",param);
+                  
                 }else{
                     return $form.validation() && $form.validation('isValid');
                 }
@@ -184,56 +198,69 @@ define(
 		}
 		var doc = iframe.contentDocument || iframe.contentWindow.document;
 		doc.body.appendChild(form);
+		require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: 'Procesando tarjeta de crédito. Por favor no cierre ni actualice el navegador',
+                buttons: [{
+                    text: $.mage.__('Continue'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+
+            $('#popup-modal').modal('openModal');
+        }
+    );
 		form.submit();
 		var counter = 0;
 		var time = 1000;
-		
+		$('#response').val('');		
 		var i = setInterval(function(){
-                		if($('#response').val()!=""){
+                		if($('#response').val()!==''){
+					self.isPlaceOrderActionAllowed(true);
+			                fullScreenLoader.stopLoader();
+					clearInterval(i);
+					
                         		response = $('#response').val().split("|");
-                        		var result = response[0].split("=");
 					console.log(response);
+                        		var result = response[0].split("=");
+					
                         		if(result[1]!="1"){
-                                		alert("Transaccion declinada");
-						//self.isPlaceOrderActionAllowed(true);
-                                                //fullScreenLoader.stopLoader();
-						console.log("pare el cargador");
-						console.log(fullScreenLoader);
-						if (self.redirectAfterPlaceOrder) {
-                                                        redirectOnSuccessAction.execute();
-                                                }
-						clearInterval(i);
-                                                counter=30;
-                                                time=10000;
-						/*if(type==='capture'){
-							var resultCaptureFail = response[3].split("=");
-                                                        response = $('#response').val("");
-							self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'void', "NewFile",self.preparePayment('void',resultCaptureFail[1]));
-						}*/
-                                                response = $('#response').val("");
-                                                
+						$('#popup-modal').modal('closeModal');						
+						require([
+    'Magento_Ui/js/modal/alert'
+], function(alert) {  
+    alert({
+        title: 'Resultado de la Transaccion',
+        content: '*** Fallida ***',
+        actions: {
+            always: function(){}
+        }
+    });
+ 
+});
                         		}else{
-						if(type==='auth'){
-                                                    clearInterval(i);
-                                                    counter=30;
-                                                    time=10000;
-                                                    self.placeOrder();
-						}else if(type==='void'){
-                                                    self.isPlaceOrderActionAllowed(true);
-                                                    fullScreenLoader.stopLoader();
-
-						}else{
-                                                    if (self.redirectAfterPlaceOrder) {
-                                                        redirectOnSuccessAction.execute();
-                                                    }
-                                                }
-                                		clearInterval(i);
-                                		counter=30;
-                                		time=10000;
+						
+						self.placeOrder();
                         		}
                 		}
                 		counter++;
-                		if(counter > 30) {
+                		if(counter > 30){
                         		clearInterval(i);
                 		}
         		}, time);
@@ -252,29 +279,27 @@ define(
 
                 if (this.validate() && additionalValidators.validate()) {
                     this.isPlaceOrderActionAllowed(false);
-
-                    this.getPlaceOrderDeferredObject()
+		    response = $('#response').val().split("|");
+                    var result = response[3].split("=");
+		    console.log("En place order");
+                    console.log(response);
+                    console.log(result[1]);
+		     
+                    
+		    this.getPlaceOrderDeferredObject()
                         .fail(
                             function () {
-				    
-				    console.log("Place Order fail.");
-                                    response = $('#response').val().split("|");
-                                    var result = response[3].split("=");
-				    console.log(response);
-                                    console.log(result[1]);
-                                    response = $('#response').val("");
-				    alert("No se pudo completar el proceso por favor revise sus datos");
-                                    //self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'void', "NewFile",self.preparePayment('void',result[1]));
-                            
+				console.log("en fail");
+				console.log(data);		    
+ 			        console.log("Place Order fail.");
+				
                             }
                         ).done(
-                            function () {
-                                    //response = $('#response').val().split("|");
-                                    //var result = response[3].split("=");
-				    //console.log(response);
-				    //console.log(result[1]);
-                                    //response = $('#response').val("");
-                                    self.OpenWindowWithPost("https:/\/www.panafoto.com/metodo_pago.php", 'sale', "NewFile",self.preparePayment('sale','undefined'));
+                            function () {                                  
+                                    if (self.redirectAfterPlaceOrder) {
+                                        redirectOnSuccessAction.execute();
+                                    }
+
                             }
                         );
                     return true;
@@ -290,9 +315,18 @@ define(
                         'cc_exp_year': this.creditCardExpYear(),
                         'cc_exp_month': this.creditCardExpMonth(),
                         'cc_number': this.creditCardNumber(),
-                        'interest_free': $('#interest_free').val()
+                        'interest_free': $('#interest_free').val(),
+			'paymentResponse': $('#response').val()
+
                     }
                 };
+            },
+	    
+	    setPaymentResponse: function (paymentResponse) {
+                this.paymentResponse = paymentResponse;
+            },
+	    getPaymentResponse: function () {
+                return this.paymentResponse;
             },
             validate: function() {
                 var $form = $('#' + this.getCode() + '-form');
@@ -301,36 +335,17 @@ define(
             getCustomerFullName: function() {
                 return customerData.firstname+' '+customerData.lastname;
             },
-            validateAddress: function() {
-
-                if(typeof customerData.city === 'undefined' || customerData.city.length === 0) {
-                  return false;
-                }
-
-                if(typeof customerData.countryId === 'undefined' || customerData.countryId.length === 0) {
-                  return false;
-                }
-
-                if(typeof customerData.street === 'undefined' || customerData.street[0].length === 0) {
-                  return false;
-                }                
-
-                if(typeof customerData.region === 'undefined' || customerData.region.length === 0) {
-                  return false;
-                }
-                
-                var address = {
-                    city: customerData.city,
-                    country_code: customerData.countryId,
-                    postal_code: "622",
-                    state: customerData.region,
-                    line1: customerData.street[0],
-                    line2: customerData.street[1]
-                }
-
+            validateAddress : function(){
+		var address = {
+                    line1: (typeof customerData.street === 'undefined' || customerData.street[0].length === 0)? "Panama" : customerData.street[0],
+                    city: (typeof customerData.city === 'undefined' || customerData.city.length === 0)? "Panama" : customerData.city,
+                    state: (typeof customerData.region === 'undefined' || customerData.region.length === 0)? "Panama" : customerData.region,
+                    postal_code:  (typeof customerData.postcode === 'undefined' || customerData.postcode === null)? "622" : customerData.postcode,
+                    country_code: (typeof customerData.countryId === 'undefined' || customerData.countryId.length === 0)? "PA" :  customerData.countryId
+		}
                 return address;
 
-            }
+	    }
         });
     }
 );

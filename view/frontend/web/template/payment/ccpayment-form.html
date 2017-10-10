@@ -51,7 +51,7 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeOrder,
+                        click: preparePayment.bind($data,'sale','undefined'),
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
                         enable: (getCode() == isChecked())
@@ -63,10 +63,14 @@
         </div>
     </div>
 </div>
-<iframe id="iframeBAC" name="iframeBAC" height="0" frameborder="0">
+
+<iframe id="iframeBAC" name="iframeBAC" height="500" width="500" frameborder="0">
   <html>
     <head></head>
     <body>
     </body>
   </html>
 </iframe>
+<div id="popup-modal">
+</div>
+
