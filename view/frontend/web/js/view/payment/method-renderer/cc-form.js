@@ -238,18 +238,17 @@ define(
                         		response = $('#response').val().split("|");
 					console.log(response);
                         		var result = response[0].split("=");
-					
-                        		if(result[1]!="1"){
+                                        if(result[1]!="1"){
 						$('#popup-modal').modal('closeModal');						
 						require(['Magento_Ui/js/modal/alert'], 
                                                     function(alert) {  
-                                                        alert({
-                                                           title: 'Resultado de la Transaccion',
-                                                           content: '*** Fallida ***',
-                                                           actions: {
-                                                               always: function(){}
-                                                           }});
-                                                    });
+                                                           alert({
+                                                               title: 'Resultado de la Transaccion',
+                                                               content: '*** Fallida ***',
+                                                               actions: {
+                                                                   always: function(){}
+                                                               }});
+                                                       });
                         		}else{
 						
 						self.placeOrder();
