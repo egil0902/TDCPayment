@@ -241,8 +241,8 @@ define(
                                         if(result[1]!="1"){
 						$('#popup-modal').modal('closeModal');						
 						require(['Magento_Ui/js/modal/alert'], 
-                                                    function(alert) {  
-                                                           alert({
+                                                    function(alert){
+                                                        alert({
                                                                title: 'Resultado de la Transaccion',
                                                                content: '*** Fallida ***',
                                                                actions: {
