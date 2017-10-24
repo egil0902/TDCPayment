@@ -27,8 +27,8 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
  
     protected $_isGateway                   = true;
-    protected $_canCapture                  = false;
-    protected $_canCapturePartial           = false;
+    protected $_canCapture                  = true;
+    protected $_canCapturePartial           = true;
     protected $_canRefund                   = true;
     protected $_canAuthorize                = true;
     protected $months_interest_free;   
