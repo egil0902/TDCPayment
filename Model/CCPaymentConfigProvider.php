@@ -67,6 +67,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
                 $config['payment']['ccform']["cvvImageUrl"][$code] = "https:/\/".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
                 $config['payment']['ccform']["ssStartYears"][$code] = $this->getStartYears();
                 $config['payment']['bines'] = $this->getBines();
+                $config['payment']["url_submit_payment"] = "http:/\/".$_SERVER['SERVER_NAME']."/metodo_pago.php";
             }
         }
         return $config;

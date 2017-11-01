@@ -19,6 +19,17 @@
         <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
             <input type="hidden" id="openpay_token" name="openpay_token" value="" />
   	    <input type="hidden" id="response" name="response" value="" />
+        
+        <div class="fieldset">
+            <div class="field type">
+                <label class="label" style="font-weight: 350; margin-bottom: 5px;">
+                    <span>Nombre en la tarjeta de crédito</span>
+                </label>
+                <div class="control">
+                    <input type="text" size="35" maxlength="40" name="cc_name" id="cc_name" class="input-text" value="" style="width: auto;"/>
+                </div>
+            </div>
+        </div>
             <!-- ko template: 'Magento_Payment/payment/cc-form' --><!-- /ko -->
 		<div class="fieldset" data-bind="visible: showMonthsInterestFree()">                
                 <div class="field type">
@@ -51,7 +62,7 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: preparePayment.bind($data,'sale','undefined'),
+                        click: placeOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
                         enable: (getCode() == isChecked())

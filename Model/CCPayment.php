@@ -27,8 +27,8 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
  
  
     protected $_isGateway                   = true;
-    protected $_canCapture                  = true;
-    protected $_canCapturePartial           = true;
+    protected $_canCapture                  = false;
+    protected $_canCapturePartial           = false;
     protected $_canRefund                   = true;
     protected $_canAuthorize                = true;
     protected $months_interest_free;   
@@ -85,9 +85,11 @@ class CCPayment extends \Magento\Payment\Model\Method\Cc
         $infoInstance->setAdditionalInformation('cc_exp_month',
             isset($additionalData['cc_exp_month']) ? $additionalData['cc_exp_month'] : null
         );
-
         $infoInstance->setAdditionalInformation('cc_number',
             isset($additionalData['cc_number']) ? $additionalData['cc_number'] : null
+        );
+        $infoInstance->setAdditionalInformation('cc_name',
+            isset($additionalData['cc_name']) ? $additionalData['cc_name'] : null
         );
         $infoInstance->setAdditionalInformation('interest_free',
             isset($additionalData['interest_free']) ? $additionalData['interest_free'] : null
