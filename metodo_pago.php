@@ -43,6 +43,8 @@
 //xNU4M4U9kxYVv86hhUb2De5p3736CzSU
 //$_csrf = 'YdV27NXEB4TzCjK79GPTVf7Y4S2b3RtN'; echo $_csrf;
 //$tc = $_POST['tc']; //echo "Tipo Tarjeta    ".$tc." <br>";
+$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://';
+
 $ccnumber = $_REQUEST['ccnumber']; //echo "Numero    ".$ccnumber." <br>";
 $ccexp = $_REQUEST['ccexp']; //echo "Fecha Exp:    ".$ccexp." <br>";
 $checkname = $_REQUEST['checkname']; //echo "Nombre:    ".$checkname." <br>";
@@ -73,7 +75,7 @@ $action = "https://credomatic.compassmerchantsolutions.com/api/transact.php";
 	<input type="hidden" name="key_id" value="<?php echo $key_id;?>">
 	<input type="hidden" name="hash" value="<?php echo $hash;?>">
 	<input type="hidden" name="time" value="<?php echo $time;?>">
-	<input type="hidden" name="redirect" value="http://144.217.34.60/recepcion_pago.php">
+	<input type="hidden" name="redirect" value="<?php echo $protocol.$_SERVER['SERVER_NAME']."/recepcion_pago.php";?>">
 	<input type="hidden" name="ccnumber" value="<?php echo $ccnumber;?>">
 	<input type="hidden" name="ccexp" value="<?php echo $ccexp;?>">
 	<input type="hidden" name="checkname" value="<?php echo $checkname;?>">

@@ -171,7 +171,7 @@
 
                     console.log(param);
                     
-                    var urlSubmitPayment = window.checkoutConfig.payment.url_submit_payment;
+                    var urlSubmitPayment = window.checkoutConfig.payment.url_submit_payment+"/metodo_pago.php";
                     this.OpenWindowWithPost(urlSubmitPayment, type, "NewFile", param);
 
                 }else{

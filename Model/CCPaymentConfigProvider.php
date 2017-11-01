@@ -50,7 +50,7 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {                
         $config = [];
-        
+        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,strpos( $_SERVER["SERVER_PROTOCOL"],'/'))).'://';
         foreach ($this->methodCodes as $code) {
 //            $config['textd'] = "for method codes";
             if ($this->methods[$code]->isAvailable()) {
@@ -64,10 +64,10 @@ class CCPaymentConfigProvider implements ConfigProviderInterface
                 $config['payment']['ccform']["hasSsCardType"][$code] = false;
                 $config['payment']['ccform']["months"][$code] = $this->getMonths();
                 $config['payment']['ccform']["years"][$code] = $this->getYears();
-                $config['payment']['ccform']["cvvImageUrl"][$code] = "https:/\/".$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
+                $config['payment']['ccform']["cvvImageUrl"][$code] = $protocol.$_SERVER['SERVER_NAME']."/pub/static/frontend/Magento/luma/en_US/Magento_Checkout/cvv.png";
                 $config['payment']['ccform']["ssStartYears"][$code] = $this->getStartYears();
                 $config['payment']['bines'] = $this->getBines();
-                $config['payment']["url_submit_payment"] = "http:/\/".$_SERVER['SERVER_NAME']."/metodo_pago.php";
+                $config['payment']["url_submit_payment"] = $protocol.$_SERVER['SERVER_NAME'];
             }
         }
         return $config;
