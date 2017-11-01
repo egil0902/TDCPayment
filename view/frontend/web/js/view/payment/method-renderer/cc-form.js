@@ -154,9 +154,11 @@ define(
                  'firstname' : customerData.firstname, 
                  'lastname' : customerData.lastname,
                  'phone' : customerData.telephone,
-                 'address1' : this.validateAddress(),
+                 'address1' : data["address"]["line1"]+" "+data["address"]["city"]+" "+data["address"]["state"]+" "+data["address"]["country_code"],
                  'type' : type
                 };
+	console.log("Los Parametros");
+	console.log(param);
         var transactionid='undefined';
                 if(p_transactionid!=='undefined'){
                         transactionid=p_transactionid;

@@ -21,7 +21,7 @@
                                                                     <item name="component" xsi:type="string">CDS_CCPayment/js/view/payment/ccpayment</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="ccpayment" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
                                                                 </item>
