@@ -315,7 +315,11 @@
              */
              placeOrder: function (data, event) {
                 var self = this;
-
+                if(this.validateAddress() !== false){
+                        data["address"] = this.validateAddress();
+                    }else{
+                        return this.validateAddress();
+                    }
                 if (event) {
                     event.preventDefault();
                 }
