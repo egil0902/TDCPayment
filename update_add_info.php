@@ -1,5 +1,4 @@
 <?php
-    error_reporting( error_reporting() & ~E_NOTICE );
     use Magento\Framework\App\Bootstrap;
 
     require __DIR__ . '/app/bootstrap.php';
@@ -21,9 +20,6 @@
     foreach ($ordersPayment as $payment) {
         $addData = $payment->getAdditionalInformation();
 
-        //print_r($addData);
-        //echo '<br>';
-
         // *** Ocultar datos de la TDC y guarda la respuesta del banco en sales_order_payment *** //
         $newAddData = Array();
         (array_key_exists("cc_cid", $addData) ? $newAddData["cc_cid"] = '***' : $newAddData["cc_cid"] = '***');
@@ -36,8 +32,6 @@
         (array_key_exists("paymentResponse", $addData) ? $newAddData["paymentResponse"] = $addData["paymentResponse"] : $newAddData["paymentResponse"] =  '');
         (array_key_exists("method_title", $addData) ? $newAddData["method_title"] = $addData["method_title"] : $newAddData["method_title"] =  '');
 
-        //print_r($newAddData);
-        //echo '<br><br>';
         $payment->setAdditionalInformation($newAddData);
         $payment->save();
     }
