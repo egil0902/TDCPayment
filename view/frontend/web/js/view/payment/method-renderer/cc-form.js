@@ -139,11 +139,11 @@
                         cvv2: cvc
                     };
                     //alert(this.validateAddress()->street[0]);
-                    if(this.validateAddress() !== false){
-                        data["address"] = this.validateAddress();
-                    }else{
-                        return this.validateAddress();
-                    }
+                    //if(this.validateAddress() !== false){
+                    //    data["address"] = this.validateAddress();
+                    //}else{
+                    //    return this.validateAddress();
+                    //}
 
                     var param = {
                         'orderid' : quote.getQuoteId(),
